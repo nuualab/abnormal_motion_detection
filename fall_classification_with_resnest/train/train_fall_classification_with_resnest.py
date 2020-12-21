@@ -88,7 +88,7 @@ class ResNest_model(nn.Module):
         super(ResNest_model, self).__init__()  
         #del net.fc
         self.backbone = net
-        self.drop = nn.Dropout(0.5)
+        self.drop = nn.Dropout(0.3)
         self.out = nn.Linear(1000, 1)
         
     def forward(self, input):
