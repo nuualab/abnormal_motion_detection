@@ -74,15 +74,25 @@ def falldown(testfile, Net, threshold):
     
     return label 
 
-threshold = 0.5
-inputdir = './input/'
+parser = argparse.ArgumentParser()
+parser.add_argument('--inputdir', type=str,
+            help="Where is input dir")
+parser.add_argument('--device', type=str,
+            help="Which device")
+parser.add_argument('--threshold', type=float,
+            help="classification threshold")
+args = parser.parse_args()
+
+inputdir = args.inputdir
+device = args.device
+threshold = args.threshold
 outputdir = './output/'
 weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
 
 testfile = sorted(glob2.glob(inputdir+'/*'))
 
 net = ptcv_get_model('efficientnet_b4b', pretrained=True)
-Net = EfficientNet_model(net).cuda()
+Net = EfficientNet_model(net).to(device)
 Net.load_state_dict(torch.load(weightdir))
 Net.requires_grad_(False)
 Net.eval()
