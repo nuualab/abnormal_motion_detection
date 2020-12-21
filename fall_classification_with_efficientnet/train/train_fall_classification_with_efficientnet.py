@@ -140,9 +140,15 @@ transform = A.Compose([
             A.IAASharpen(),
             A.IAAEmboss(),                   
         ], p=0.2),
-        
-    A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    albumentations.pytorch.transforms.ToTensor()
+
+        A.OneOf([
+            A.OpticalDistortion(p=0.3),
+            A.GridDistortion(p=.1),
+            A.IAAPiecewiseAffine(p=0.3),
+        ], p=0.2), 
+    
+        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+        albumentations.pytorch.transforms.ToTensor()
     ])
 
 def UpDown_Resize(image, upsize, downsize, p=0.1):
