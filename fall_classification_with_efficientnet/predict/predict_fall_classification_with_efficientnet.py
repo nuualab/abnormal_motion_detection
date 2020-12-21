@@ -20,14 +20,6 @@ import torch.nn as nn
 import random
 from pytorchcv.model_provider import get_model as ptcv_get_model
 
-inputdir = './input/'
-outputdir = './output/'
-weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
-
-testfile = sorted(glob2.glob(inputdir+'/*'))
-
-net = ptcv_get_model('efficientnet_b4b', pretrained=True)
-
 class EfficientNet_model(nn.Module):
     def __init__(self, net):
         super(EfficientNet_model, self).__init__()        
@@ -42,19 +34,6 @@ class EfficientNet_model(nn.Module):
         output = self.out(x)
         
         return output
-
-Net = EfficientNet_model(net).cuda()
-Net.load_state_dict(torch.load(weightdir))
-Net.requires_grad_(False)
-Net.eval()
-
-val_transform = albumentations.Compose(
-    [
-        albumentations.Resize(224, 224),
-        albumentations.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-        albumentations.pytorch.transforms.ToTensor()
-    ]
-)
 
 class FallDataset(Dataset):
 
@@ -94,3 +73,31 @@ def falldown(testfile, Net, threshold):
             label.append(0)
     
     return label 
+
+threshold = 0.5
+inputdir = './input/'
+outputdir = './output/'
+weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
+
+testfile = sorted(glob2.glob(inputdir+'/*'))
+
+net = ptcv_get_model('efficientnet_b4b', pretrained=True)
+Net = EfficientNet_model(net).cuda()
+Net.load_state_dict(torch.load(weightdir))
+Net.requires_grad_(False)
+Net.eval()
+
+val_transform = albumentations.Compose(
+    [
+        albumentations.Resize(224, 224),
+        albumentations.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+        albumentations.pytorch.transforms.ToTensor()
+    ]
+)
+
+output = falldown(testfile, Net, threshold)
+answer = pd.DataFrame(testfile)  
+answer['label'] = output
+if not os.path.exists(outputdir):
+    os.makedirs(outputdir)
+answer.to_csv(outputdir+'output.txt', index=False,  header=None)
