@@ -68,14 +68,13 @@ def falldown(testfile, Net, threshold):
 
     for j in range(len(Scores)):
         if Scores[j]>(threshold):
-            #label.append(1)
-            label.append(Scores[j])
+            label.append(1)
         else:
-            label.append(Scores[j])
+            label.append(0)
     
     return label 
 
-threshold = 0.2
+threshold = 0.5
 inputdir = './input/'
 outputdir = './output/'
 weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
