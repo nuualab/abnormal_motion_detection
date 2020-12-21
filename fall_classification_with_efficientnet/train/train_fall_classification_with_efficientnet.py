@@ -129,12 +129,18 @@ transform = A.Compose([
         A.Transpose(p=0.1),
         A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=25, p=0.2),
         A.RandomBrightnessContrast(p=0.2, brightness_limit = 0.8, contrast_limit = 0.8), 
-        A.RandomRotate90(p=0.5)], p=0.05),
+    
         A.OneOf([
             A.MotionBlur(p=0.2),
-                         A.Blur(p=0.2),
+            A.Blur(p=0.2),
         ],p=0.2),
-    
+
+        A.OneOf([
+            A.CLAHE(clip_limit=2),
+            A.IAASharpen(),
+            A.IAAEmboss(),                   
+        ], p=0.2),
+        
     A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
     albumentations.pytorch.transforms.ToTensor()
     ])
