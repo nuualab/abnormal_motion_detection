@@ -55,3 +55,42 @@ val_transform = albumentations.Compose(
         albumentations.pytorch.transforms.ToTensor()
     ]
 )
+
+class FallDataset(Dataset):
+
+    def __init__(self, img_ids, transform):
+        self.img_ids = img_ids
+        self.transform = transform
+    def __len__(self):
+        return len(self.img_ids)
+
+    def __getitem__(self, idx):
+        image = self.img_ids[idx]
+        img = cv2.imread(image, cv2.IMREAD_COLOR)[..., ::-1]
+        
+        if self.transform:
+            augmented = self.transform(image=img) 
+            image = augmented['image']
+        
+        return image
+
+def falldown(testfile, Net, threshold):
+    testset = FallDataset(testfile, val_transform)
+    test_loader = DataLoader(testset, batch_size=1, num_workers = 2, shuffle=False)
+    scores= []
+    label = []
+    for j, d in enumerate(test_loader):
+                with torch.no_grad():
+                    score = F.sigmoid(Net(d.cuda()))
+                    scores += score.tolist()
+                    
+    S = np.array(scores)
+    Scores = np.concatenate(S)
+
+    for j in range(len(Scores)):
+        if Scores[j]>(threshold):
+            label.append(1)
+        else:
+            label.append(0)
+    
+    return label 
