@@ -84,7 +84,7 @@ if __name__ =='__main__':
     
     inputdir = args.inputdir
     device = args.device
-    threshold = 0.5
+    threshold = 0.8
 
     outputdir = './output/'
     weightdir = "./FallDown_resnest50_github/fallweight.pth"
