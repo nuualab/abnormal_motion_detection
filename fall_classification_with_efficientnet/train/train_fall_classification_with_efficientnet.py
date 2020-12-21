@@ -116,7 +116,7 @@ albumentations_transform = A.Compose([
 val_transform = albumentations.Compose(
     [
         albumentations.Resize(224, 224),
-        #albumentations.CenterCrop(height=128, width=128),
+        albumentations.CenterCrop(height=128, width=128),
         albumentations.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         albumentations.pytorch.transforms.ToTensor()
     ]
