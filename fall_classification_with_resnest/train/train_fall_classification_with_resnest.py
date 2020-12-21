@@ -101,7 +101,7 @@ class ResNest_model(nn.Module):
 Net = ResNest_model(net).to(device)
 
 albumentations_transform = A.Compose([
-    A.Resize(256, 256), 
+    A.Resize(512, 512),
     A.RandomCrop(224, 224),
     A.Flip(p=0.5), # Same with transforms.RandomHorizontalFlip()
     A.OneOf([A.MotionBlur(p=0.3),
