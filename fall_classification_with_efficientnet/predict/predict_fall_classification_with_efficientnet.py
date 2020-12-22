@@ -93,11 +93,13 @@ if __name__ =='__main__':
                 help="Which device")
     parser.add_argument('--threshold', type=float,
                 help="classification threshold")
+    parser.add_argument('--weightdir', type=str, help="weight directory", default=False)
     args = parser.parse_args()
     
     inputdir = args.inputdir
     device = args.device
     threshold = args.threshold
+    weightdir = args.weightdir
 
     outputdir = './output/'
     #weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
@@ -107,7 +109,8 @@ if __name__ =='__main__':
 
     net = ptcv_get_model('efficientnet_b4b', pretrained=True)
     Net = EfficientNet_model(net).to(device)
-    #Net.load_state_dict(torch.load(weightdir))
+    if weightdir != False:
+        Net.load_state_dict(torch.load(weightdir))
     Net.requires_grad_(False)
     Net.eval()
     val_transform = albumentations.Compose(
