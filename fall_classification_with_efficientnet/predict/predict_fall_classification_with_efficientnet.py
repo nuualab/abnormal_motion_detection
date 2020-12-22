@@ -72,10 +72,11 @@ def falldown(testfile, Net, threshold):
     Scores = np.concatenate(S)
 
     for j in range(len(Scores)):
-        if Scores[j]>(threshold):
-            label.append(1)
-        else:
-            label.append(0)
+        label.append(Scores[j])
+        #if Scores[j]>(threshold):
+        #    label.append(1)
+        #else:
+        #    label.append(0)
     
     
     #print(f"S: {S}")
