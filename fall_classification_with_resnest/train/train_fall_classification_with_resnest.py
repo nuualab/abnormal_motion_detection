@@ -103,13 +103,13 @@ Net = ResNest_model(net).to(device)
 albumentations_transform = A.Compose([
     A.Resize(256, 256),
     A.RandomCrop(224, 224),
-    A.Flip(p=0.5), # Same with transforms.RandomHorizontalFlip()
-    #A.OneOf([A.MotionBlur(p=0.3),
-    #                     A.Blur(p=0.3),
-    #                      A.GaussNoise(p=0.3) ]),
+    A.Flip(p=0.2), # Same with transforms.RandomHorizontalFlip()
+    A.OneOf([A.MotionBlur(p=0.3),
+                         A.Blur(p=0.3),
+                          A.GaussNoise(p=0.3) ]),
     A.Rotate(p=0.2),
     
-    #A.RandomBrightnessContrast(p=0.2),
+    A.RandomBrightnessContrast(p=0.2),
     #A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
 
     A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
