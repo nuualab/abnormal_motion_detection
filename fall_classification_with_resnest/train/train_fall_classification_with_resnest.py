@@ -46,7 +46,7 @@ outputdir = './output/'
 train_F = []
 valid_F = []
 for i in range(len(F)):
-    if i % 20 == 0:
+    if i % 10 == 0:
         valid_F.append(F[i])
     else:
         train_F.append(F[i])
@@ -54,7 +54,7 @@ for i in range(len(F)):
 train_NF = []
 valid_NF = []
 for i in range(len(NF)):
-    if i % 20 == 0:
+    if i % 10 == 0:
         valid_NF.append(NF[i])
     else:
         train_NF.append(NF[i])
@@ -88,7 +88,7 @@ class ResNest_model(nn.Module):
         super(ResNest_model, self).__init__()  
         #del net.fc
         self.backbone = net
-        self.drop = nn.Dropout(0.3)
+        self.drop = nn.Dropout(0.5)
         self.out = nn.Linear(1000, 1)
         
     def forward(self, input):
