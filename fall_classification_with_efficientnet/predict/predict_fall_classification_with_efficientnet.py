@@ -62,6 +62,7 @@ def falldown(testfile, Net, threshold):
                 with torch.no_grad():
                     score = F.sigmoid(Net(d.cuda()))
                     scores += score.tolist()
+    
                     
     S = np.array(scores)
     Scores = np.concatenate(S)
@@ -71,6 +72,12 @@ def falldown(testfile, Net, threshold):
             label.append(1)
         else:
             label.append(0)
+    
+    print(f"score: {score}")
+    print(f"scores: {scores}")
+    print(f"S: {S}")
+    print(f"Scores: {Scores}")
+    print(f"label: {label}")
     
     return label  
 
