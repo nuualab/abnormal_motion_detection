@@ -87,13 +87,13 @@ if __name__ =='__main__':
     threshold = 0.8
 
     outputdir = './output/'
-    weightdir = "./FallDown_resnest50_github/fallweight.pth"
+    weightdir = "./FallDown_resnest100_github/fallweight.pth"
   
 
     testfile = sorted(glob2.glob(inputdir+'/*'))
 
     torch.hub.list('zhanghang1989/ResNeSt', force_reload=True)
-    net = torch.hub.load('zhanghang1989/ResNeSt', 'resnest50', pretrained=False)
+    net = torch.hub.load('zhanghang1989/ResNeSt', 'resnest100', pretrained=False)
     Net = ResNest_model(net).to(device)
     Net.load_state_dict(torch.load(weightdir))
     Net.requires_grad_(False)
