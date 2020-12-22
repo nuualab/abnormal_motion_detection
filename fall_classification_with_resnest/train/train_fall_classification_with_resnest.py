@@ -46,7 +46,7 @@ outputdir = './output/'
 train_F = []
 valid_F = []
 for i in range(len(F)):
-    if i % 20 == 0:
+    if i % 10 == 0:
         valid_F.append(F[i])
     else:
         train_F.append(F[i])
@@ -54,7 +54,7 @@ for i in range(len(F)):
 train_NF = []
 valid_NF = []
 for i in range(len(NF)):
-    if i % 20 == 0:
+    if i % 10 == 0:
         valid_NF.append(NF[i])
     else:
         train_NF.append(NF[i])
@@ -88,7 +88,7 @@ class ResNest_model(nn.Module):
         super(ResNest_model, self).__init__()  
         #del net.fc
         self.backbone = net
-        self.drop = nn.Dropout(0.3)
+        self.drop = nn.Dropout(0.5)
         self.out = nn.Linear(1000, 1)
         
     def forward(self, input):
@@ -101,15 +101,15 @@ class ResNest_model(nn.Module):
 Net = ResNest_model(net).to(device)
 
 albumentations_transform = A.Compose([
-    A.Resize(256, 256),
-    A.RandomCrop(224, 224),
-    A.Flip(p=0.5), # Same with transforms.RandomHorizontalFlip()
-    #A.OneOf([A.MotionBlur(p=0.3),
-    #                     A.Blur(p=0.3),
-    #                      A.GaussNoise(p=0.3) ]),
-    A.Rotate(p=0.2),
+    A.Resize(224, 224),
+    #A.RandomCrop(224, 224),
+    A.Flip(p=0.2), # Same with transforms.RandomHorizontalFlip()
+    A.OneOf([A.MotionBlur(p=0.3),
+                         A.Blur(p=0.3),
+                          A.GaussNoise(p=0.3) ]),
+    A.Rotate(p=0.5),
     
-    #A.RandomBrightnessContrast(p=0.2),
+    A.RandomBrightnessContrast(p=0.2),
     #A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
 
     A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
