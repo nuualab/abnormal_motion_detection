@@ -55,13 +55,18 @@ class FallDataset(Dataset):
     
 def falldown(testfile, Net, threshold):
     testset = FallDataset(testfile, val_transform)
-    test_loader = DataLoader(testset, batch_size=1, num_workers = 2, shuffle=False)
+    test_loader = DataLoader(testset, batch_size=8, num_workers = 8, shuffle=False)
     scores= []
     label = []
     for j, d in enumerate(test_loader):
-                with torch.no_grad():
-                    score = F.sigmoid(Net(d.cuda()))
-                    scores += score.tolist()
+        if j % 100 == 0:
+            print(f"{j} step / {len(test_loader)} steps")
+        with torch.no_grad():
+            score = F.sigmoid(Net(d.cuda()))
+            scores += score.tolist()
+            #print(f"score: {score}")
+            #print(f"scores: {scores}")
+    
                     
     S = np.array(scores)
     Scores = np.concatenate(S)
@@ -71,6 +76,11 @@ def falldown(testfile, Net, threshold):
             label.append(1)
         else:
             label.append(0)
+    
+    
+    #print(f"S: {S}")
+    #print(f"Scores: {Scores}")
+    #print(f"label: {label}")
     
     return label  
 
@@ -83,21 +93,24 @@ if __name__ =='__main__':
                 help="Which device")
     parser.add_argument('--threshold', type=float,
                 help="classification threshold")
+    parser.add_argument('--weightdir', type=str, help="weight directory", default=False)
     args = parser.parse_args()
     
     inputdir = args.inputdir
     device = args.device
     threshold = args.threshold
+    weightdir = args.weightdir
 
     outputdir = './output/'
-    weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
+    #weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
   
 
     testfile = sorted(glob2.glob(inputdir+'/*'))
 
     net = ptcv_get_model('efficientnet_b4b', pretrained=True)
     Net = EfficientNet_model(net).to(device)
-    Net.load_state_dict(torch.load(weightdir))
+    if weightdir != False:
+        Net.load_state_dict(torch.load(weightdir))
     Net.requires_grad_(False)
     Net.eval()
     val_transform = albumentations.Compose(
