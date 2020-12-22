@@ -52,7 +52,7 @@ class FallDataset(Dataset):
             image = augmented['image']
         
         return image
-
+    
 def falldown(testfile, Net, threshold):
     testset = FallDataset(testfile, val_transform)
     test_loader = DataLoader(testset, batch_size=1, num_workers = 2, shuffle=False)
@@ -72,42 +72,45 @@ def falldown(testfile, Net, threshold):
         else:
             label.append(0)
     
-    return label 
+    return label  
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--inputdir', type=str,
-            help="Where is input dir")
-parser.add_argument('--device', type=str,
-            help="Which device")
-parser.add_argument('--threshold', type=float,
-            help="classification threshold")
-args = parser.parse_args()
+if __name__ =='__main__':
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--inputdir', type=str,
+                help="Where is input dir")
+    parser.add_argument('--device', type=str,
+                help="Which device")
+    parser.add_argument('--threshold', type=float,
+                help="classification threshold")
+    args = parser.parse_args()
+    
+    inputdir = args.inputdir
+    device = args.device
+    threshold = args.threshold
 
-inputdir = args.inputdir
-device = args.device
-threshold = args.threshold
-outputdir = './output/'
-weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
+    outputdir = './output/'
+    weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
+  
 
-testfile = sorted(glob2.glob(inputdir+'/*'))
+    testfile = sorted(glob2.glob(inputdir+'/*'))
 
-net = ptcv_get_model('efficientnet_b4b', pretrained=True)
-Net = EfficientNet_model(net).to(device)
-Net.load_state_dict(torch.load(weightdir))
-Net.requires_grad_(False)
-Net.eval()
+    net = ptcv_get_model('efficientnet_b4b', pretrained=True)
+    Net = EfficientNet_model(net).to(device)
+    Net.load_state_dict(torch.load(weightdir))
+    Net.requires_grad_(False)
+    Net.eval()
+    val_transform = albumentations.Compose(
+        [
+            albumentations.Resize(224, 224),
+            albumentations.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            albumentations.pytorch.transforms.ToTensor()
+        ]
+    )
 
-val_transform = albumentations.Compose(
-    [
-        albumentations.Resize(224, 224),
-        albumentations.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-        albumentations.pytorch.transforms.ToTensor()
-    ]
-)
-
-output = falldown(testfile, Net, threshold)
-answer = pd.DataFrame(testfile)  
-answer['label'] = output
-if not os.path.exists(outputdir):
-    os.makedirs(outputdir)
-answer.to_csv(outputdir+'output.txt', index=False,  header=None)
+    output = falldown(testfile, Net, threshold)
+    answer = pd.DataFrame(testfile)  
+    answer['label'] = output
+    if not os.path.exists(outputdir):
+        os.makedirs(outputdir)
+    answer.to_csv(outputdir+'output.txt', index=False,  header=None)
