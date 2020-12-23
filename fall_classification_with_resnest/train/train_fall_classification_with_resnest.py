@@ -135,8 +135,8 @@ transform = A.Compose([
        #      A.RandomRotate90(p=0.5)], p=0.05),
         A.HorizontalFlip(p=0.5),
         A.Transpose(p=0.1),
-        A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=25, p=0.2),
-        A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
+        #A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=25, p=0.2),
+        #A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
         A.OneOf([
             A.MotionBlur(p=0.01,
                          A.Blur(p=0.01),
