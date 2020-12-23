@@ -104,9 +104,9 @@ albumentations_transform = A.Compose([
     A.Resize(224, 224),
     #A.RandomCrop(224, 224),
     A.Flip(p=0.2), # Same with transforms.RandomHorizontalFlip()
-    A.OneOf([A.MotionBlur(p=0.3),
-                         A.Blur(p=0.3),
-                          A.GaussNoise(p=0.3) ]),
+    A.OneOf([A.MotionBlur(p=0.01),
+                         A.Blur(p=0.01),
+                          A.GaussNoise(p=0.01) ]),
     A.Rotate(p=0.5),
     
     A.RandomBrightnessContrast(p=0.2),
@@ -138,8 +138,8 @@ transform = A.Compose([
         A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=25, p=0.2),
         A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
         A.OneOf([
-            A.MotionBlur(p=0.2),
-                         A.Blur(p=0.2),
+            A.MotionBlur(p=0.01,
+                         A.Blur(p=0.01),
                           #A.GaussNoise(var_limit=(5.0, 20.0),p=0.2) 
         ],p=0.2),
         #A.RandomFog(p=0.05),
