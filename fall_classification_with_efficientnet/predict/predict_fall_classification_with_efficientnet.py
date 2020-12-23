@@ -66,6 +66,21 @@ def falldown(testfile, Net, threshold):
             scores += score.tolist()
             #print(f"score: {score}")
             #print(f"scores: {scores}")
+
+def falldown_ensemble(testfile, Net, Net2, threshold):
+    testset = FallDataset(testfile, val_transform)
+    test_loader = DataLoader(testset, batch_size=8, num_workers = 8, shuffle=False)
+    scores= []
+    label = []
+    for j, d in enumerate(test_loader):
+        if j % 100 == 0:
+            print(f"{j} step / {len(test_loader)} steps")
+        with torch.no_grad():
+            score1 = F.sigmoid(Net(d.cuda()))
+            score2 = F.sigmoid(Net2(d.cuda()))
+            scores += (score1 + score2)/2.tolist()
+            #print(f"score: {score}")
+            #print(f"scores: {scores}")
     
                     
     S = np.array(scores)
