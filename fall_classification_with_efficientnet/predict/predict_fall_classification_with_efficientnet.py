@@ -125,6 +125,7 @@ if __name__ =='__main__':
 
     net = ptcv_get_model('efficientnet_b4b', pretrained=True)
     Net = EfficientNet_model(net).to(device)
+    Net2 = EfficientNet_model(net).to(device)
     if weightdir != False:
         Net.load_state_dict(torch.load(weightdir))
     Net.requires_grad_(False)
@@ -139,7 +140,7 @@ if __name__ =='__main__':
 
     #output = falldown(testfile, Net, threshold)
 
-    output = falldown_ensemble(testfile, Net, Net, threshold)
+    output = falldown_ensemble(testfile, Net, Net2, threshold)
 
     answer = pd.DataFrame(testfile)  
     answer['label'] = output
