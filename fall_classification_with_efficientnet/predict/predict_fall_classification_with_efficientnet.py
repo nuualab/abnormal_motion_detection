@@ -110,12 +110,14 @@ if __name__ =='__main__':
     parser.add_argument('--threshold', type=float,
                 help="classification threshold")
     parser.add_argument('--weightdir', type=str, help="weight directory", default=False)
+    parser.add_argument('--weightdir2', type=str, help="weight directory", default=False)
     args = parser.parse_args()
     
     inputdir = args.inputdir
     device = args.device
     threshold = args.threshold
     weightdir = args.weightdir
+    weightdir2 = args.weightdir2
 
     outputdir = './output/'
     #weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
@@ -127,6 +129,8 @@ if __name__ =='__main__':
     Net = EfficientNet_model(net).to(device)
     Net2 = EfficientNet_model(net).to(device)
     if weightdir != False:
+        Net.load_state_dict(torch.load(weightdir))
+    if weightdir2 != False:
         Net.load_state_dict(torch.load(weightdir))
     Net.requires_grad_(False)
     Net.eval()
