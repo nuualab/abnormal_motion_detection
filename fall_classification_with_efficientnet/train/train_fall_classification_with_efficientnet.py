@@ -260,8 +260,8 @@ optimizer_grouped_parameters = [
         ] 
 
 optimizer = torch.optim.AdamW(Net.parameters(), 1e-5)   
-#scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=3, verbose=True)
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, eta_min=0)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=3, verbose=True)
+
 
 Loss = nn.BCEWithLogitsLoss().cuda()
 
