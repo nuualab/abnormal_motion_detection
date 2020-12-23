@@ -78,7 +78,7 @@ def falldown_ensemble(testfile, Net, Net2, threshold):
         with torch.no_grad():
             score1 = F.sigmoid(Net(d.cuda()))
             score2 = F.sigmoid(Net2(d.cuda()))
-            scores += (score1 + score2)/2.tolist()
+            scores += ((score1 + score2)/2).tolist()
             #print(f"score: {score}")
             #print(f"scores: {scores}")
     
@@ -137,7 +137,10 @@ if __name__ =='__main__':
         ]
     )
 
-    output = falldown(testfile, Net, threshold)
+    #output = falldown(testfile, Net, threshold)
+
+    output = falldown_ensemble(testfile, Net, Net, threshold)
+
     answer = pd.DataFrame(testfile)  
     answer['label'] = output
     if not os.path.exists(outputdir):
