@@ -82,7 +82,6 @@ def falldown_ensemble(testfile, Net, Net2, threshold):
             #print(f"score: {score}")
             #print(f"scores: {scores}")
     
-                    
     S = np.array(scores)
     Scores = np.concatenate(S)
 
@@ -92,7 +91,6 @@ def falldown_ensemble(testfile, Net, Net2, threshold):
         #    label.append(1)
         #else:
         #    label.append(0)
-    
     
     #print(f"S: {S}")
     #print(f"Scores: {Scores}")
@@ -122,7 +120,6 @@ if __name__ =='__main__':
     outputdir = './output/'
     #weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
   
-
     testfile = sorted(glob2.glob(inputdir+'/*'))
 
     net = ptcv_get_model('efficientnet_b4b', pretrained=True)
