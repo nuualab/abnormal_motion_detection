@@ -157,7 +157,7 @@ transform = A.Compose([
            # A.CLAHE(clip_limit=2),
         #    A.IAASharpen(),
         #    A.IAAEmboss(),
-        A.RandomBrightnessContrast(p=0.2, brightness_limit = 0.8, contrast_limit = 0.8),            
+        A.RandomBrightnessContrast(p=0.5, brightness_limit = 0.2, contrast_limit = 0.2),
         #], p=0.2),
         #A.HueSaturationValue(p=0.05),
     
