@@ -146,6 +146,12 @@ transform = A.Compose([
             A.GridDistortion(p=.1),
             A.IAAPiecewiseAffine(p=0.3),
         ], p=0.2), 
+
+        A.OneOf([
+            A.RandomFog(p=0.05),
+            A.RandomShadow(p=0.05),
+            A.RandomSnow(p=0.05)
+        ], p=0.1),
     
         A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         albumentations.pytorch.transforms.ToTensor()
