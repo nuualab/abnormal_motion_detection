@@ -35,6 +35,8 @@ parser.add_argument('--lr', type=float,
             help="Learning Rate")
 parser.add_argument('--epochs', type=int,
             help="Num Epochs")
+parser.add_argument('--batch_size', type=int, default=32
+            help="Train Batch Size")
 args = parser.parse_args()
 
 NF = sorted(glob2.glob(args.Nofalldir))
@@ -235,9 +237,9 @@ def aspectaware_resize_padding(img, width, height, means =(0.485, 0.456, 0.406),
     return canvas, scale 
 
 trainset = Dataset(train_image, train_label, transform)
-train_loader = DataLoader(trainset, batch_size=32, num_workers=2, shuffle=True)
+train_loader = DataLoader(trainset, batch_size=args.batch_size, num_workers=2, shuffle=True)
 validset = Dataset(valid_image, valid_label, val_transform)
-valid_loader = DataLoader(validset, batch_size=32, num_workers=2, shuffle=False)
+valid_loader = DataLoader(validset, batch_size=args.batch_size, num_workers=2, shuffle=False)
 
 if not os.path.exists(outputdir):
         os.makedirs(outputdir)
