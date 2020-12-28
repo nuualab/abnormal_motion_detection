@@ -158,7 +158,7 @@ def UpDown_Resize(image, upsize, downsize, p=0.1):
     return image
 
 def black_BBox_inPerson(image, num=5, p=0.1, size=20):
-    if random.random()<p:
+    if random.random() < p:
         h,w,_ = image.shape
         x1 = 0
         y1 = 0
@@ -258,7 +258,7 @@ optimizer_grouped_parameters = [
         ] 
 
 optimizer = torch.optim.AdamW(Net.parameters(), lr)   
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=3, verbose=True)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, eta_min=0)
 
 
 Loss = nn.BCEWithLogitsLoss().cuda()
