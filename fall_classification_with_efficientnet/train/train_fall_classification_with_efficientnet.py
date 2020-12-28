@@ -133,6 +133,7 @@ transform = A.Compose([
         A.OneOf([
             A.MotionBlur(p=0.2),
             A.Blur(p=0.2),
+            A.GaussNoise(var_limit=(5.0, 20.0),p=0.2),
         ],p=0.2),
 
         A.OneOf([
