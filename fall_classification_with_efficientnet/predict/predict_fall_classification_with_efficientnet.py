@@ -64,12 +64,11 @@ def falldown(testfile, Net, threshold):
         with torch.no_grad():
             score = F.sigmoid(Net(d.cuda()))
             scores += score.tolist()
-            #print(f"score: {score}")
-            #print(f"scores: {scores}")
+
 
 def falldown_ensemble(testfile, Net, Net2, Net3, threshold):
     testset = FallDataset(testfile, val_transform)
-    test_loader = DataLoader(testset, batch_size=8, num_workers = 8, shuffle=False)
+    test_loader = DataLoader(testset, batch_size=16, num_workers = 8, shuffle=False)
     scores= []
     label = []
     for j, d in enumerate(test_loader):
@@ -80,23 +79,13 @@ def falldown_ensemble(testfile, Net, Net2, Net3, threshold):
             score2 = F.sigmoid(Net2(d.cuda()))
             score3 = F.sigmoid(Net3(d.cuda()))
             scores += ((score1 + score2 + score3)/3).tolist()
-            #print(f"score: {score}")
-            #print(f"scores: {scores}")
     
     S = np.array(scores)
     Scores = np.concatenate(S)
 
     for j in range(len(Scores)):
         label.append(Scores[j])
-        #if Scores[j]>(threshold):
-        #    label.append(1)
-        #else:
-        #    label.append(0)
-    
-    #print(f"S: {S}")
-    #print(f"Scores: {Scores}")
-    #print(f"label: {label}")
-    
+
     return label  
 
 if __name__ =='__main__':
