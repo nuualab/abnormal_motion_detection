@@ -135,8 +135,8 @@ transform = A.Compose([
        #      A.RandomRotate90(p=0.5)], p=0.05),
         A.HorizontalFlip(p=0.5),
         A.Transpose(p=0.1),
-        A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=25, p=0.2),
-        A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
+        #A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=25, p=0.2),
+        #A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.2),
         A.OneOf([
             A.MotionBlur(p=0.01,
                          A.Blur(p=0.01),
@@ -157,7 +157,7 @@ transform = A.Compose([
            # A.CLAHE(clip_limit=2),
         #    A.IAASharpen(),
         #    A.IAAEmboss(),
-        A.RandomBrightnessContrast(p=0.2, brightness_limit = 0.8, contrast_limit = 0.8),            
+        A.RandomBrightnessContrast(p=0.5, brightness_limit = 0.2, contrast_limit = 0.2),
         #], p=0.2),
         #A.HueSaturationValue(p=0.05),
     
@@ -219,8 +219,8 @@ class Dataset(Dataset):
         image = self.img_ids[idx]
         img = cv2.imread(image, cv2.IMREAD_COLOR)[..., ::-1]
         #size = 224
-        #img, scale = aspectaware_resize_padding(img, size, size)
-        #img = UpDown_Resize(img, upsize=1024, downsize=128, p=0.1)
+        img, scale = aspectaware_resize_padding(img, size, size)
+        img = UpDown_Resize(img, upsize=1024, downsize=128, p=0.1)
         img = black_BBox_inPerson(img, num=3, p=0.2)
         img = cvt_img_day_to_night(img)       
         label = self.labels[idx]
