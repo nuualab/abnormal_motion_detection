@@ -126,10 +126,11 @@ if __name__ =='__main__':
     net = ptcv_get_model('efficientnet_b4b', pretrained=True)
     Net = EfficientNet_model(net).to(device)
     Net2 = EfficientNet_model(net).to(device)
+    Net3 = EfficientNet_model(net).to(device)
     if weightdir != False:
         Net.load_state_dict(torch.load(weightdir))
     if weightdir2 != False:
-        Net.load_state_dict(torch.load(weightdir))
+        Net2.load_state_dict(torch.load(weightdir2))
     Net.requires_grad_(False)
     Net.eval()
     val_transform = albumentations.Compose(
