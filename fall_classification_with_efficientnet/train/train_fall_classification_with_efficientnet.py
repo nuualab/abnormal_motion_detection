@@ -65,20 +65,6 @@ valid_image = valid_F + valid_NF
 train_label = [1] * len(train_F) + [0] * len(train_NF)
 valid_label = [1] * len(valid_F) + [0] * len(valid_NF)
 
-def compute_iou(box_a, box_b):
-    max_x = min(box_a[3], box_b[3])
-    max_y = min(box_a[4], box_b[4])
-    min_x = max(box_a[1], box_b[1])
-    min_y = max(box_a[2], box_b[2])
-    
-    intersection = max(max_x-min_x, 0) * max(max_y-min_y, 0)
-
-    area_a = (box_a[3] - box_a[1]) * (box_a[4] - box_a[2])
-    area_b = (box_b[4] - box_b[2]) * (box_b[3] - box_b[1])
-    union = area_a + area_b - intersection
-
-    return intersection / union
-
 net = ptcv_get_model('efficientnet_b4b', pretrained=True)
 class EfficientNet_model(nn.Module):
     def __init__(self, net):
@@ -225,7 +211,7 @@ class Dataset(Dataset):
         
         return image, torch.as_tensor([label], dtype=torch.float32)
 
-def aspectaware_resize_padding(img, width, height, means =(0.485, 0.456, 0.406), std =(0.229, 0.224, 0.225),                               interpolation=None):
+def aspectaware_resize_padding(img, width, height, means =(0.485, 0.456, 0.406), std =(0.229, 0.224, 0.225), interpolation=None):
     #normalization
     image = (img / 255 - means) / std 
     
