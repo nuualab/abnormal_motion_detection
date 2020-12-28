@@ -110,6 +110,7 @@ if __name__ =='__main__':
                 help="classification threshold")
     parser.add_argument('--weightdir', type=str, help="weight directory", default=False)
     parser.add_argument('--weightdir2', type=str, help="weight directory", default=False)
+    parser.add_argument('--weightdir3', type=str, help='weight directory', default=False)
     args = parser.parse_args()
     
     inputdir = args.inputdir
@@ -117,6 +118,7 @@ if __name__ =='__main__':
     threshold = args.threshold
     weightdir = args.weightdir
     weightdir2 = args.weightdir2
+    weightdir3 = args.weightdir3
 
     outputdir = './output/'
     #weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
@@ -131,6 +133,8 @@ if __name__ =='__main__':
         Net.load_state_dict(torch.load(weightdir))
     if weightdir2 != False:
         Net2.load_state_dict(torch.load(weightdir2))
+    if weightdir3 != False:
+        Net3.load_state_dict(torch.load(weightdir3))
     Net.requires_grad_(False)
     Net.eval()
     val_transform = albumentations.Compose(
@@ -143,7 +147,7 @@ if __name__ =='__main__':
 
     #output = falldown(testfile, Net, threshold)
 
-    output = falldown_ensemble(testfile, Net, Net2, Net, threshold)
+    output = falldown_ensemble(testfile, Net, Net2, Net3, threshold)
 
     answer = pd.DataFrame(testfile)  
     answer['label'] = output
