@@ -68,7 +68,7 @@ def falldown(testfile, Net, threshold):
 
 def falldown_ensemble(testfile, Net, Net2, Net3, threshold):
     testset = FallDataset(testfile, val_transform)
-    test_loader = DataLoader(testset, batch_size=16, num_workers = 16, shuffle=False)
+    test_loader = DataLoader(testset, batch_size = 16, num_workers = 16, shuffle = False)
     scores= []
     label = []
     for j, d in enumerate(test_loader):
