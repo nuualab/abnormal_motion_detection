@@ -220,7 +220,7 @@ class Dataset(Dataset):
         img = cv2.imread(image, cv2.IMREAD_COLOR)[..., ::-1]
         #size = 224
         img, scale = aspectaware_resize_padding(img, size, size)
-        img = UpDown_Resize(img, upsize=1024, downsize=128, p=0.1)
+        img = UpDown_Resize(img, upsize=512, downsize=128, p=0.2)
         img = black_BBox_inPerson(img, num=3, p=0.2)
         img = cvt_img_day_to_night(img)       
         label = self.labels[idx]
