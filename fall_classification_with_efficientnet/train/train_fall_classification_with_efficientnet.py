@@ -35,6 +35,11 @@ parser.add_argument('--lr', type=float,
             help="Learning Rate")
 parser.add_argument('--epochs', type=int,
             help="Num Epochs")
+parser.add_argument('--batch_size', type=int, default=32,
+            help="Train Batch Size")
+parser.add_argument('--num_workers', type=int, default=2,
+            help="Num Workers")
+
 args = parser.parse_args()
 
 NF = sorted(glob2.glob(args.Nofalldir))
@@ -64,20 +69,6 @@ train_image = train_F + train_NF
 valid_image = valid_F + valid_NF
 train_label = [1] * len(train_F) + [0] * len(train_NF)
 valid_label = [1] * len(valid_F) + [0] * len(valid_NF)
-
-def compute_iou(box_a, box_b):
-    max_x = min(box_a[3], box_b[3])
-    max_y = min(box_a[4], box_b[4])
-    min_x = max(box_a[1], box_b[1])
-    min_y = max(box_a[2], box_b[2])
-    
-    intersection = max(max_x-min_x, 0) * max(max_y-min_y, 0)
-
-    area_a = (box_a[3] - box_a[1]) * (box_a[4] - box_a[2])
-    area_b = (box_b[4] - box_b[2]) * (box_b[3] - box_b[1])
-    union = area_a + area_b - intersection
-
-    return intersection / union
 
 net = ptcv_get_model('efficientnet_b4b', pretrained=True)
 class EfficientNet_model(nn.Module):
@@ -133,6 +124,7 @@ transform = A.Compose([
         A.OneOf([
             A.MotionBlur(p=0.2),
             A.Blur(p=0.2),
+            A.GaussNoise(var_limit=(5.0, 20.0),p=0.2),
         ],p=0.2),
 
         A.OneOf([
@@ -146,6 +138,13 @@ transform = A.Compose([
             A.GridDistortion(p=.1),
             A.IAAPiecewiseAffine(p=0.3),
         ], p=0.2), 
+
+        A.OneOf([
+            A.RandomFog(p=0.05),
+            A.RandomShadow(p=0.05),
+            A.RandomSnow(p=0.05),
+            A.HueSaturationValue(p=0.05),
+        ], p=0.1),
     
         A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         albumentations.pytorch.transforms.ToTensor()
@@ -160,7 +159,7 @@ def UpDown_Resize(image, upsize, downsize, p=0.1):
     return image
 
 def black_BBox_inPerson(image, num=5, p=0.1, size=20):
-    if random.random()<p:
+    if random.random() < p:
         h,w,_ = image.shape
         x1 = 0
         y1 = 0
@@ -218,7 +217,7 @@ class Dataset(Dataset):
         
         return image, torch.as_tensor([label], dtype=torch.float32)
 
-def aspectaware_resize_padding(img, width, height, means =(0.485, 0.456, 0.406), std =(0.229, 0.224, 0.225),                               interpolation=None):
+def aspectaware_resize_padding(img, width, height, means =(0.485, 0.456, 0.406), std =(0.229, 0.224, 0.225), interpolation=None):
     #normalization
     image = (img / 255 - means) / std 
     
@@ -242,9 +241,9 @@ def aspectaware_resize_padding(img, width, height, means =(0.485, 0.456, 0.406),
     return canvas, scale 
 
 trainset = Dataset(train_image, train_label, transform)
-train_loader = DataLoader(trainset, batch_size=32, num_workers=2, shuffle=True)
+train_loader = DataLoader(trainset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True)
 validset = Dataset(valid_image, valid_label, val_transform)
-valid_loader = DataLoader(validset, batch_size=32, num_workers=2, shuffle=False)
+valid_loader = DataLoader(validset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False)
 
 if not os.path.exists(outputdir):
         os.makedirs(outputdir)
@@ -259,8 +258,8 @@ optimizer_grouped_parameters = [
             {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
         ] 
 
-optimizer = torch.optim.AdamW(Net.parameters(), 1e-5)   
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=3, verbose=True)
+optimizer = torch.optim.AdamW(Net.parameters(), lr)   
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10, eta_min=0)
 
 
 Loss = nn.BCEWithLogitsLoss().cuda()
