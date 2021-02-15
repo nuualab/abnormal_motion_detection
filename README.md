@@ -1,5 +1,37 @@
 # abnormal_motion_detection
+사람의 쓰러짐 여부를 판별할 수 있는 모델을 배포합니다.   
+Efficientnet, Resnest Pretrained 모델에 자체 데이터셋을 추가 학습시켜 성능을 향상 시킨 모델 입니다.   
+전이학습 시 사용된 모델의 이름은 아래와 같습니다.
+
+|     모델    |       이름       |
+|------------|----------------|
+| Efficientnet | efficientnet_b4b |  
+| Resnest | resnest100 | 
+
+
+## Requirements
+Python 3.6+
+Pytorch 1.4.0+
+
+## How to install
+
+```
+pip install git+https://github.com/SKT-AI/KoBART#egg=kobart
+```
+
+## How to Inference
+```
+python predict_fall_classification_with_resnest.py --inputdir test_img --device 0
+python predict_fall_classification_with_efficientnet.py --inputdir test_img --device 0
+```
+
+## Pretrained Model Download
 
 [Efficientnet Pretrained weights](https://drive.google.com/file/d/1oZAZSS0ZYNIn1wsNF-B66csRFCqwnR0N/view?usp=sharing, "Efficientnet")
 
 [Resnest Pretrained weights](https://drive.google.com/file/d/12LjvNFXF6G0QoCQApiGrhdYUEIeqzG7K/view?usp=sharing, "Resnest")
+
+## License
+이 프로젝트는 Apache 2.0 라이선스를 따릅니다. 모델 및 코드를 사용할 경우 라이선스 내용을 준수해주세요. 라이선스 전문은 LICENSE 파일에서 확인하실 수 있습니다.
+
+이 프로젝트는 과학기술정보통신부 인공지능산업원천기술개발사업의 지원을 통해 제작 되었습니다.
