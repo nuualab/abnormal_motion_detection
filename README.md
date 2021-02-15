@@ -6,17 +6,20 @@ Efficientnet, Resnest Pretrained 모델에 자체 데이터셋을 추가 학습�
 |     모델    |       이름       |
 |------------|----------------|
 | Efficientnet | efficientnet_b4b |  
-| Resnest | resnest100 | 
+| Resnest | resnest50 | 
+
 
 ## Requirements
 Python 3.6+.  
 Pytorch 1.4.0+
+
 
 ## How to install
 
 ```
 git clone https://github.com/nuualab/abnormal_motion_detection
 ```
+
 
 ## How to Train
 ```
@@ -35,11 +38,12 @@ input 디렉토리에 이미지를 넣고 inference를 하게 되면 결과 파�
 test1.png 1   
 test2.png 0
 
+
 ## Pretrained Model Download
 
 [Efficientnet Pretrained weights](https://drive.google.com/file/d/1oZAZSS0ZYNIn1wsNF-B66csRFCqwnR0N/view?usp=sharing, "Efficientnet")
-
 [Resnest Pretrained weights](https://drive.google.com/file/d/12LjvNFXF6G0QoCQApiGrhdYUEIeqzG7K/view?usp=sharing, "Resnest")
+
 
 ## License
 이 프로젝트는 Apache 2.0 라이선스를 따릅니다. 모델 및 코드를 사용할 경우 라이선스 내용을 준수해주세요. 라이선스 전문은 LICENSE 파일에서 확인하실 수 있습니다.
