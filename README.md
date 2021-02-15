@@ -15,7 +15,7 @@ Pytorch 1.4.0+
 ## How to install
 
 ```
-pip install git+https://github.com/SKT-AI/KoBART#egg=kobart
+git clone https://github.com/nuualab/abnormal_motion_detection
 ```
 
 ## How to Inference
