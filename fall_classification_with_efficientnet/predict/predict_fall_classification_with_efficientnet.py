@@ -64,27 +64,15 @@ def falldown(testfile, Net, threshold):
         with torch.no_grad():
             score = F.sigmoid(Net(d.cuda()))
             scores += score.tolist()
-
-
-def falldown_ensemble(testfile, Net, Net2, Net3, threshold):
-    testset = FallDataset(testfile, val_transform)
-    test_loader = DataLoader(testset, batch_size = 16, num_workers = 16, shuffle = False)
-    scores= []
-    label = []
-    for j, d in enumerate(test_loader):
-        if j % 100 == 0:
-            print(f"{j} step / {len(test_loader)} steps")
-        with torch.no_grad():
-            score1 = F.sigmoid(Net(d.cuda()))
-            score2 = F.sigmoid(Net2(d.cuda()))
-            score3 = F.sigmoid(Net3(d.cuda()))
-            scores += ((score1 + score2 + score3)/3).tolist()
     
     S = np.array(scores)
     Scores = np.concatenate(S)
 
     for j in range(len(Scores)):
-        label.append(Scores[j])
+        if Scores[j] >= 0.5:
+            label.append(1)
+        else:
+            label.append(0)
 
     return label  
 
@@ -98,32 +86,23 @@ if __name__ == "__main__":
     parser.add_argument("--threshold", type=float,
                 help="classification threshold")
     parser.add_argument("--weightdir", type=str, help="weight directory", default=False)
-    parser.add_argument("--weightdir2", type=str, help="weight directory", default=False)
-    parser.add_argument("--weightdir3", type=str, help="weight directory", default=False)
     args = parser.parse_args()
     
     inputdir = args.inputdir
     device = args.device
     threshold = args.threshold
     weightdir = args.weightdir
-    weightdir2 = args.weightdir2
-    weightdir3 = args.weightdir3
+
 
     outputdir = "./output/"
-    #weightdir = "./FallDown_efficientnetb4b_github/fallweight.pth"
   
     testfile = sorted(glob2.glob(inputdir + "/*"))
 
     net = ptcv_get_model("efficientnet_b4b", pretrained=True)
     Net = EfficientNet_model(net).to(device)
-    Net2 = EfficientNet_model(net).to(device)
-    Net3 = EfficientNet_model(net).to(device)
     if weightdir != False:
         Net.load_state_dict(torch.load(weightdir))
-    if weightdir2 != False:
-        Net2.load_state_dict(torch.load(weightdir2))
-    if weightdir3 != False:
-        Net3.load_state_dict(torch.load(weightdir3))
+
     Net.requires_grad_(False)
     Net.eval()
     val_transform = albumentations.Compose(
@@ -134,9 +113,7 @@ if __name__ == "__main__":
         ]
     )
 
-    #output = falldown(testfile, Net, threshold)
-
-    output = falldown_ensemble(testfile, Net, Net2, Net3, threshold)
+    output = falldown(testfile, Net, threshold)
 
     answer = pd.DataFrame(testfile)  
     answer["label"] = output
