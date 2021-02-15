@@ -8,7 +8,6 @@ Efficientnet, Resnest Pretrained 모델에 자체 데이터셋을 추가 학습�
 | Efficientnet | efficientnet_b4b |  
 | Resnest | resnest100 | 
 
-
 ## Requirements
 Python 3.6+.  
 Pytorch 1.4.0+
@@ -24,6 +23,10 @@ pip install git+https://github.com/SKT-AI/KoBART#egg=kobart
 python predict_fall_classification_with_resnest.py --inputdir test_img --device 0
 python predict_fall_classification_with_efficientnet.py --inputdir test_img --device 0
 ```
+* input 디렉토리에 이미지를 넣고 inference를 하게 되면 결과 파일(output.txt)이 아래와 같은 포맷으로 생성 됩니다.   
+test1.png 1   
+test2.png 0
+
 
 ## Pretrained Model Download
 
