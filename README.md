@@ -10,7 +10,7 @@ Efficientnet, Resnest Pretrained 모델에 자체 데이터셋을 추가 학습�
 
 
 ## Requirements
-Python 3.6+
+Python 3.6+.  
 Pytorch 1.4.0+
 
 ## How to install
